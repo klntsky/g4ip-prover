@@ -1,0 +1,6 @@
+\documentclass{article}
+\usepackage[mathletters]{ucs}
+\usepackage{bussproofs}
+\usepackage[utf8]{inputenc}
+\usepackage[a3paper]{geometry}
+\begin{document}

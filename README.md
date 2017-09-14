@@ -6,6 +6,10 @@ Implementation of a theorem prover for intuitionistic propositional logic using 
 
 Fork of [cacay/G4ip](https://github.com/cacay/G4ip/).
 
+### G4ip rules
+
+![G4ip rules](g4ip.png)
+
 ## Improvements over the original code
 
 * proof trees are now constructing explicitly

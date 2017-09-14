@@ -35,7 +35,7 @@ executable g4ip-prover
 
   other-modules: Parser, Prover, Proposition, LaTeXExporter
 
-  build-depends:       base >=4.9 && <4.10
+  build-depends:       base >=4.9 && <4.10, array >= 0.5 && < 1.0
 
   hs-source-dirs:      src
 

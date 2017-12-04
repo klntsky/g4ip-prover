@@ -1,9 +1,11 @@
 module Main (main) where
 
 import Control.Monad (when)
+import System.Directory (doesFileExist, getPermissions, readable, createDirectoryIfMissing)
 import System.Environment
 import System.Exit (exitSuccess, exitWith, ExitCode (ExitFailure))
 import System.IO
+import Filesystem.Path.CurrentOS (decodeString, encodeString, directory)
 
 import Parser
 import Prover
@@ -62,18 +64,38 @@ parseArgs o ("--context-file":f:xs) =
 parseArgs o _ = o { argParseError = True }
 
 
+readFileIfExists :: String -> IO String
+readFileIfExists path = do
+  exists <- doesFileExist path
+  if exists then do
+    isReadable <- getPermissions path >>= return . readable
+    if isReadable
+    then readFile path
+    else do
+      putStrLn $ "Warning: file is not readable: " ++ path ++ ", ignoring"
+      return ""
+  else do
+    putStrLn $ "Warning: file does not exist: " ++ path ++ ", ignoring"
+    return ""
+
+
+writeFileForcibly file content = do
+  createDirectoryIfMissing True . encodeString . directory $ decodeString file
+  writeFile file content
+
+
 process opts input =
   case parseProp input of
     Right prop -> do
       putStrLn $ "Proposition: " ++ show prop
       case prove prop of
         Just proofTree -> do
-          pHeader <- readFile (proofHeader opts)
-          pFooter <- readFile (proofFooter opts)
-          cHeader <- readFile (contextHeader opts)
-          cFooter <- readFile (contextFooter opts)
-          writeFile (proofFile opts) (pHeader ++ proofToString proofTree ++ pFooter)
-          writeFile (contextFile opts) (cHeader ++ exportContexts proofTree ++ cFooter)
+          pHeader <- readFileIfExists (proofHeader opts)
+          pFooter <- readFileIfExists (proofFooter opts)
+          cHeader <- readFileIfExists (contextHeader opts)
+          cFooter <- readFileIfExists (contextFooter opts)
+          writeFileForcibly (proofFile opts) (pHeader ++ proofToString proofTree ++ pFooter)
+          writeFileForcibly (contextFile opts) (cHeader ++ exportContexts proofTree ++ cFooter)
           putStrLn $ "Proof written to: " ++ (proofFile opts)
           putStrLn $ "Context list written to: " ++ (contextFile opts)
         Nothing -> putStrLn "Not provable."
@@ -95,7 +117,7 @@ printUsage = putStrLn usage
       "  --proof-file <file>         Proof file name. If the file exists, it will be overwritten.\n" ++
       "  --context-file <file>       Context file name. If the file exists, it will be overwritten.\n\n" ++
       "PROPOSITION syntax\n" ++
-      "  Variables are lower-case english words or characters.\n" ++
+      "  Variables must consist of lower-case english characters and numbers.\n" ++
       "  Propositional connectives (with precedence level):\n" ++
       "    ~ , -    - negation, 1\n" ++
       "    /\\, &    - conjunction, 2\n" ++
@@ -112,7 +134,7 @@ repl opts = do
   putStr "g4ip> "
   hFlush stdout
   prop <- getLine
-  when (prop == "exit") exitSuccess
+  when (prop `elem` ["exit", "quit", ":q"]) exitSuccess
   process (opts { proposition = Just prop }) prop
   repl opts
 
@@ -124,4 +146,6 @@ main = do
   when (help opts) (printUsage >> exitSuccess)
   case proposition opts of
     Just prop -> process opts prop
-    Nothing -> repl opts { startREPL = True }
+    Nothing -> do
+      putStrLn "Welcome to g4ip-prover! Type \"exit\" to exit."
+      repl opts { startREPL = True }

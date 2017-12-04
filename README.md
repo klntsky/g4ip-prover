@@ -52,7 +52,7 @@ If the proposition was not specified, the user will be prompted to enter it inte
 ### Proposition syntax
 
 ```
-Variables are lower-case english words or characters.
+Variables must consist of lower-case english characters and numbers.
 Propositional connectives (with precedence level):
    ~ , -    - negation, 1
    /\, &    - conjunction, 2

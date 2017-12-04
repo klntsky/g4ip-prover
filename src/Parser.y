@@ -102,7 +102,7 @@ tokenize ('F':cs) = TokenF : tokenize cs
 tokenize input@(c:cs)
   | isVarChar c = TokenVar var : tokenize rest
   where
-    isVarChar = (`elem` "abcdefghijklmnopqrstuvwxyz")
+    isVarChar = (`elem` "abcdefghijklmnopqrstuvwxyz1234567890")
     (var, rest) = span isVarChar input
 -- just skip unrecognizable characters
 tokenize (_:cs) = tokenize cs

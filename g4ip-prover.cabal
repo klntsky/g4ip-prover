@@ -1,6 +1,6 @@
 name:                g4ip-prover
 
-version:             0.1.0.0
+version:             0.1.0.1
 
 synopsis: Theorem prover for intuitionistic propositional logic using G4ip
 

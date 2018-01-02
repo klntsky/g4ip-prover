@@ -84,7 +84,7 @@ writeFileForcibly file content = do
   writeFile file content
 
 
-process opts input =
+processProp opts input =
   case parseProp input of
     Right prop -> do
       putStrLn $ "Proposition: " ++ show prop
@@ -131,10 +131,14 @@ printUsage = putStrLn $
 repl opts = do
   putStr "g4ip> "
   hFlush stdout
-  prop <- getLine
-  when (prop `elem` ["exit", "quit", ":q"]) exitSuccess
-  process (opts { proposition = Just prop }) prop
+  input <- getLine
+  process input
   repl opts
+  where
+    process input
+      | input `elem` ["exit", "quit", ":q"] = exitSuccess
+      | input `elem` ["help", ":h"] = printUsage
+      | otherwise = processProp opts { proposition = Just input } input
 
 
 main = do
@@ -143,7 +147,8 @@ main = do
   when (argParseError opts) (printUsage >> exitWith (ExitFailure 1))
   when (help opts) (printUsage >> exitSuccess)
   case proposition opts of
-    Just prop -> process opts prop
+    Just prop -> processProp opts prop
     Nothing -> do
-      putStrLn "Welcome to g4ip-prover! Type \"exit\" to exit."
+      putStrLn $ "Welcome to g4ip-prover! Now enter proposition to prove.\n" ++
+                 "Type \"help\" for help or \"exit\" to exit."
       repl opts { startREPL = True }

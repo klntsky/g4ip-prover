@@ -1,13 +1,13 @@
 {-# OPTIONS_HADDOCK prune, ignore-exports #-}
 -- | Exporter for proofs
-module LaTeXExporter (proofToString, exportContexts)
+module G4ipProver.LaTeXExporter (proofToString, exportContexts)
 where
 
 
 import Data.List (nub, elemIndex)
 
-import Prover
-import Proposition
+import G4ipProver.Prover
+import G4ipProver.Proposition
 
 
 -- | Accessory data type representing structure of the proof.

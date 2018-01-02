@@ -1,5 +1,5 @@
 -- | Definition of propositions and some syntactic sugar
-module Proposition (
+module G4ipProver.Proposition (
     Prop (..)
   , (/\)
   , (\/)

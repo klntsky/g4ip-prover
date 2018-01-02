@@ -1,5 +1,5 @@
 -- | The actual theorem prover
-module Prover
+module G4ipProver.Prover
   (
     prove,
     decide,
@@ -13,8 +13,10 @@ import Control.Arrow (second)
 import Data.List (inits, tails)
 import Data.Tuple (uncurry)
 import Control.Monad (liftM2)
-import Data.Maybe (catMaybes, isJust)
-import Proposition (Prop (..))
+import Data.Maybe (catMaybes, isJust, listToMaybe)
+
+
+import G4ipProver.Proposition (Prop (..))
 
 
 -- | Construct a proof if it exists for the given proposition.
@@ -120,9 +122,7 @@ right ([], other) c =
 
 -- | Non-invertible decisions
 left :: [Prop] -> Prop -> Maybe (ProofTree Context)
-left other c = case catMaybes $ map (`elim` c) (pulls other) of
-  [] -> Nothing
-  (x:_) -> Just x
+left other c = listToMaybe . catMaybes . map (`elim` c) $ pulls other
   where
     -- | Pull one element out for all elements. For example,
     --

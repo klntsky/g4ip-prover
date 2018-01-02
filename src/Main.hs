@@ -7,9 +7,9 @@ import System.Exit (exitSuccess, exitWith, ExitCode (ExitFailure))
 import System.IO
 import Filesystem.Path.CurrentOS (decodeString, encodeString, directory)
 
-import Parser
-import Prover
-import LaTeXExporter
+import G4ipProver.Parser
+import G4ipProver.Prover
+import G4ipProver.LaTeXExporter
 
 
 data Args = Args {
@@ -68,7 +68,7 @@ readFileIfExists :: String -> IO String
 readFileIfExists path = do
   exists <- doesFileExist path
   if exists then do
-    isReadable <- getPermissions path >>= return . readable
+    isReadable <- readable <$> getPermissions path
     if isReadable
     then readFile path
     else do
@@ -104,9 +104,7 @@ process opts input =
       when (not $ startREPL opts) $ exitWith (ExitFailure 2)
 
 
-printUsage = putStrLn usage
-  where
-    usage =
+printUsage = putStrLn $
       "USAGE\n" ++
       "g4ip-prover [OPTIONS] PROPOSITION\n" ++
       "g4ip-prover [OPTIONS]\n\nOPTIONS\n" ++

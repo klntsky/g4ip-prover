@@ -1,7 +1,7 @@
 {
-module Parser (parseProp) where
+module G4ipProver.Parser (parseProp) where
 
-import Proposition
+import G4ipProver.Proposition
 }
 
 

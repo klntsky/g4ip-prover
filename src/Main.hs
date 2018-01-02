@@ -100,7 +100,7 @@ processProp opts input =
           putStrLn $ "Context list written to: " ++ (contextFile opts)
         Nothing -> putStrLn "Not provable."
     Left err -> do
-      putStrLn $ "Incorrect proposition: " ++ err
+      putStrLn $ "No parse for " ++ input ++ "; error: " ++ err
       when (not $ startREPL opts) $ exitWith (ExitFailure 2)
 
 
@@ -149,6 +149,6 @@ main = do
   case proposition opts of
     Just prop -> processProp opts prop
     Nothing -> do
-      putStrLn $ "Welcome to g4ip-prover! Now enter proposition to prove.\n" ++
+      putStrLn $ "Welcome to g4ip-prover! Now enter a proposition to prove.\n" ++
                  "Type \"help\" for help or \"exit\" to exit."
       repl opts { startREPL = True }

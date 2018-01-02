@@ -10,7 +10,7 @@ category:            Logic
 build-type:          Simple
 extra-source-files:  README.md, README-ru.md, static/proof-header.txt,
                      static/proof-footer.txt, static/context-header.txt,
-                     static/context-footer.txt, g4ip.png, src/Parser.y
+                     static/context-footer.txt, g4ip.png, src/G4ipProver/Parser.y
 cabal-version:       >=1.10
 
 source-repository head
@@ -19,7 +19,7 @@ source-repository head
 
 executable g4ip-prover
   main-is:             Main.hs
-  other-modules:       Parser, Prover, Proposition, LaTeXExporter
+  other-modules:       G4ipProver.Parser, G4ipProver.Prover, G4ipProver.Proposition, G4ipProver.LaTeXExporter
   build-depends:       base >=4.9 && <4.11, array >= 0.5 && < 1.0, directory >= 1.0 && < 2.0, system-filepath >= 0.4 && < 1.0
   build-tool-depends:  happy:happy
   hs-source-dirs:      src

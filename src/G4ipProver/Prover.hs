@@ -3,20 +3,21 @@ module G4ipProver.Prover
   (
     prove,
     decide,
+    add,
+    right,
+    left,
+    elim,
     ProofTree(..),
     Context
   )
 where
 
+import G4ipProver.Proposition (Prop (..))
 
 import Control.Arrow (second)
 import Data.List (inits, tails)
-import Data.Tuple (uncurry)
 import Control.Monad (liftM2)
 import Data.Maybe (catMaybes, isJust, listToMaybe)
-
-
-import G4ipProver.Proposition (Prop (..))
 
 
 -- | Construct a proof if it exists for the given proposition.
@@ -93,7 +94,7 @@ right ctx (Imp a b) =
 right ctx@(And a b : inv, other) c =
   right (add a $ add b (inv, other)) c >>=
   Just . AndLeft ctx a b c
-right ctx@(F : _, a) c = Just $ BottomL ctx c
+right ctx@(F : _, _) c = Just $ BottomL ctx c
 right ctx@(Or a b : inv, other) c =
   right (add a (inv, other)) c >>=
   (\p1 -> right (add b (inv, other)) c >>=
@@ -118,6 +119,7 @@ right ctx@([], other) t@(Or a b) =
         Nothing -> Nothing
 right ([], other) c =
   left other c
+right _ _ = Nothing
 
 
 -- | Non-invertible decisions
@@ -138,7 +140,6 @@ elim (Atom s1, ctx) r@(Atom s2) =
   if s1 == s2 then
     Just (InitRule ([], ctx) r)
   else Nothing
-elim (Atom s, _) _ = Nothing
 elim (Imp sa@(Atom s) b, other) c =
   right ([], other) (Atom s) >>=
   \p1 -> right (add b ([], other)) c >>=
@@ -147,3 +148,4 @@ elim (Imp (Imp d e) b, other) c =
   right (add d $ add (Imp e b) ([], other)) e >>=
   \p1 -> right (add b ([], other)) c >>=
   Just . ImpImpLeft ([], other) d e b c p1
+elim _ _ = Nothing

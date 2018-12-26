@@ -10,7 +10,7 @@ import G4ipProver.Prover
 import G4ipProver.Proposition
 
 
--- | Accessory data type representing structure of the proof.
+-- | Data type representing proof structure (without rules).
 data BussTree =
   Axiom String |
   Unary String BussTree (Maybe String) |
@@ -27,11 +27,15 @@ treeToLatex (Binary s t1 t2 l) =
 
 
 -- | Add @\\RightLabel{ ... }@ to tree node.
-addLabel Nothing = ""
-addLabel (Just s) = "\\RightLabel{" ++ s ++ "}"
+addLabel :: Maybe String -> String
+addLabel = maybe "" (\s -> "\\RightLabel{" ++ s ++ "}")
 
 
+downarrow :: BussTree
 downarrow = Axiom " $\\downarrow$ "
+
+
+turnstile :: String
 turnstile = " $\\vdash$ "
 
 
@@ -174,7 +178,7 @@ proofToString proofTree =
 exportContexts :: ProofTree Context -> String
 exportContexts proofTree =
   foldl (\x y -> x ++ "\n\n" ++ y) "" .
-  map (\(s, n) -> "$\\Gamma_{" ++ show n ++ "} = $" ++ s) $
+  map (\(s, n) -> "$\\Gamma_{" ++ show (n :: Integer) ++ "} = $" ++ s) $
   zip (map showContext $ getContexts proofTree) [1..]
 
 

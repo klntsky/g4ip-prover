@@ -5,7 +5,7 @@ import System.Directory (doesFileExist, getPermissions, readable, createDirector
 import System.Environment
 import System.Exit (exitSuccess, exitWith, ExitCode (ExitFailure))
 import System.IO
-import Filesystem.Path.CurrentOS (decodeString, encodeString, directory)
+import System.FilePath (takeDirectory)
 
 import G4ipProver.Parser
 import G4ipProver.Prover
@@ -27,6 +27,7 @@ data Args = Args {
   deriving (Show)
 
 
+defaultArgs :: Args
 defaultArgs = Args {
   proposition = Nothing,
   help = False,
@@ -79,11 +80,13 @@ readFileIfExists path = do
     return ""
 
 
+writeFileForcibly :: FilePath -> String -> IO ()
 writeFileForcibly file content = do
-  createDirectoryIfMissing True . encodeString . directory $ decodeString file
+  createDirectoryIfMissing True . takeDirectory $ file
   writeFile file content
 
 
+processProp :: Args -> String -> IO ()
 processProp opts input =
   case parseProp input of
     Right prop -> do
@@ -104,6 +107,7 @@ processProp opts input =
       when (not $ startREPL opts) $ exitWith (ExitFailure 2)
 
 
+printUsage :: IO ()
 printUsage = putStrLn $
       "USAGE\n" ++
       "g4ip-prover [OPTIONS] PROPOSITION\n" ++
@@ -128,6 +132,7 @@ printUsage = putStrLn $
       "    F - False"
 
 
+repl :: Args -> IO b
 repl opts = do
   putStr "g4ip> "
   hFlush stdout
@@ -141,6 +146,7 @@ repl opts = do
       | otherwise = processProp opts { proposition = Just input } input
 
 
+main :: IO ()
 main = do
   args <- getArgs
   let opts = parseArgs defaultArgs args

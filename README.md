@@ -18,10 +18,16 @@ Fork of [cacay/G4ip](https://github.com/cacay/G4ip/).
 
 ## File Structure
 
-* G4ip/Proposition.hs   -- Definition of propositions and some syntactic sugar
-* G4ip/Prover.hs       -- The actual theorem prover
-* G4ip/Parser.hs        -- Parser for propositions
-* G4ip/LaTeXExporter.hs -- Exporter for proofs
+* G4ipProver/Proposition.hs   -- Definition of propositions and some syntactic sugar
+* G4ipProver/Prover.hs        -- The actual theorem prover
+* G4ipProver/Parser.hs        -- Parser for propositions
+* G4ipProver/LaTeXExporter.hs -- Exporter for proofs
+* G4ipProver.hs               -- Re-exports the above module
+* Main.hs                     -- g4ip-prover binary
+
+## Running
+
+Use [stack](http://haskellstack.org/): `stack exec g4ip-prover`
 
 ## Usage
 

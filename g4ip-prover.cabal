@@ -1,7 +1,8 @@
 name:                g4ip-prover
-version:             1.0.0.0
+version:             2.0.0.0
 synopsis:            Theorem prover for intuitionistic propositional logic using G4ip
 description:         Theorem prover for intuitionistic propositional logic using G4ip
+homepage:            https://github.com/8084/g4ip-prover
 license:             MIT
 license-file:        LICENSE
 author:              Josh Acay, Klntsky

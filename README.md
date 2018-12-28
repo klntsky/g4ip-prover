@@ -22,7 +22,7 @@ Fork of [cacay/G4ip](https://github.com/cacay/G4ip/).
 * G4ipProver/Prover.hs        -- The actual theorem prover
 * G4ipProver/Parser.hs        -- Parser for propositions
 * G4ipProver/LaTeXExporter.hs -- Exporter for proofs
-* G4ipProver.hs               -- Re-exports the above module
+* G4ipProver.hs               -- Re-exports the above modules
 * Main.hs                     -- g4ip-prover binary
 
 ## Running
